@@ -26,10 +26,12 @@ namespace ReplaceRegex
             long line_number = 1;
             string line = null;
             var logs = new List<ArquivoCsv>();
+            bool arquivoModificado = false;
             foreach (string file in Directory.GetFiles(replaceConfig.Folder, replaceConfig.FileType, SearchOption.AllDirectories))
             {
                 using (StreamReader reader = new StreamReader(file))
                 using (StreamWriter writer = new StreamWriter($"{file}_temp"))
+                {
                     while ((line = reader.ReadLine()) != null)
                     {
                         if (regex.IsMatch(line) && !line.Contains("ESAPI.encoder().encodeForHTML("))
@@ -37,6 +39,7 @@ namespace ReplaceRegex
                             var newContent = Regex.Replace(line, "request\\.getParameter\\(\" *.* \"*|param\\[.*\\]\\)\\;", $"ESAPI.encoder().encodeForHTML({line.Replace(");", ")")});", RegexOptions.IgnorePatternWhitespace);
                             writer.WriteLine(newContent);
                             logs.Add(RetornaLinhaFormatada(file, line_number, line, newContent));
+                            arquivoModificado = true;
                         }
                         else
                         {
@@ -44,6 +47,18 @@ namespace ReplaceRegex
                         }
                         line_number++;
                     }
+                }
+                if (arquivoModificado)
+                {
+                    var srReader = new StreamReader($"{file}_temp");
+                    var strFileContents = srReader.ReadToEnd();
+                    srReader.Close();
+                    strFileContents = "<%@ page import=\"org.owasp.esapi.*\"%>" + Environment.NewLine + strFileContents;
+                    var swWriter = new StreamWriter($"{file}_temp", false);
+                    swWriter.Write(strFileContents);
+                    swWriter.Flush();
+                    arquivoModificado = false;
+                }
             }
             File.WriteAllText($"{Directory.GetCurrentDirectory()}/log.json", JsonConvert.SerializeObject(logs));
 
