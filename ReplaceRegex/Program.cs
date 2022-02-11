@@ -23,7 +23,8 @@ namespace ReplaceRegex
             IConfiguration config = builder.Build();
 
             ReplaceConfig replaceConfig = config.GetSection("ReplaceConfig").Get<ReplaceConfig>();
-            var regex = new Regex("^(?!if\\()^request\\.getParameter\\(\" *.* \"*|param\\[.*\\]\\)\\;", RegexOptions.IgnorePatternWhitespace);
+            var stringRegex = "^request\\.getParameter\\(\"*.*\"*|param\\[.*\\]\\)\\;";
+            var regex = new Regex(stringRegex, RegexOptions.IgnorePatternWhitespace);
             string line = null;
             var logs = new List<ArquivoCsv>();
             bool arquivoModificado = false;
