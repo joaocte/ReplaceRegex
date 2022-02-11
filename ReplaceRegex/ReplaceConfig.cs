@@ -8,5 +8,7 @@ namespace ReplaceRegex
     {
         public string FileType { get; set; }
         public string Folder { get; set; }
+
+        public string FileTypeTemp { get; set; }
     }
 }
