@@ -14,25 +14,20 @@
 //            IConfiguration config = builder.Build();
 
 //            ReplaceConfig replaceConfig = config.GetSection("ReplaceConfig").Get<ReplaceConfig>();
-//            var arquivos = Directory.GetFiles(replaceConfig.Folder, "*", SearchOption.AllDirectories);
+//            var arquivos = Directory.GetFiles(replaceConfig.Folder, $"*{replaceConfig.FileTypeTemp}", SearchOption.AllDirectories);
 //            foreach (string file in arquivos)
 //            {
 //                var fileName = Path.GetFileName(file);
 
-//                if (fileName.EndsWith(replaceConfig.FileType))
-//                {
-//                    var arquivoTemporario = fileName.Replace($"{replaceConfig.FileType}", $"{replaceConfig.FileType}{replaceConfig.FileTypeTemp}");
+//                    var arquivoOriginal = fileName.Replace($"{replaceConfig.FileTypeTemp}", "");
 //                    var diretorio = Path.GetDirectoryName(file);
-//                    if (File.Exists($"{diretorio}/{arquivoTemporario}"))
+
+//                    if (File.Exists($"{diretorio}/{arquivoOriginal}"))
 //                    {
-//                        File.Delete(file);
+//                        File.Delete(($"{diretorio}/{arquivoOriginal}"));
 //                    }
-//                }
-//                else if (fileName.EndsWith(replaceConfig.FileTypeTemp))
-//                {
 //                    File.Move(file, Path.ChangeExtension(file, ""));
 
-//                }
 //            }
 
 //        }
